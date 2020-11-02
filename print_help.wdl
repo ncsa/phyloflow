@@ -1,3 +1,7 @@
+# Prints help messages from pyclone and pyclone-vi packages. 
+# Proves that you have the docker image and the pyclone* installs
+# inside them are working.
+
 version 1.0
 
 task pyclone_help{
