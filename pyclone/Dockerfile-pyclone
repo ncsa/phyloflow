@@ -20,7 +20,16 @@ RUN apt-get -qq update && \
         curl \
         wget \
         bzip2 \
-        ca-certificates 
+        ca-certificates
+
+#put a fake screen in the container so pyclone can import tkinter for a graph it makes
+# https://stackoverflow.com/questions/46613117/why-does-conda-install-tk-not-work-in-my-docker-container-even-though-it-says-it
+RUN apt-get -qq install --no-install-recommends \
+		xvfb 
+
+#pyclone-vi doesn't have a real conda package so the source must be installed over pip using git
+RUN apt-get -qq install --no-install-recommends \
+		git	
 
 
 #####
@@ -38,19 +47,35 @@ RUN ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/dockeruser/.bashrc
 RUN echo "conda activate base" >> /home/dockeruser/.bashrc
 
-#######
-## Begin pyclone specific install
-######
 RUN conda config --add channels bioconda
 RUN conda config --add channels conda-forge
-RUN conda install --yes --name base pyclone 
 
 #copy the phyloflow/pyclone/code directory into the container. It contains the
 #script that runs automatically when the container starts
 COPY ./code /code
 
 #######
+## Begin pyclone specific install
+######
+RUN conda create -n pyclone 
+RUN conda install --yes --name pyclone pyclone
+RUN conda install --yes --name pyclone tk
+
+#######
 ## End pyclone specific install
+#####
+
+#######
+## Begin pyclone-vi specific install
+######
+
+RUN wget https://raw.githubusercontent.com/Roth-Lab/pyclone-vi/master/requirements.txt
+RUN conda create -n pyclone-vi --file requirements.txt --yes
+RUN conda run -v -n pyclone-vi pip install -v git+https://github.com/aroth85/pyclone-vi.git
+
+
+#######
+## End pyclone-vi specific install
 #####
 
 #try to reduce the size of the image
