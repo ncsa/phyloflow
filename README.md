@@ -10,7 +10,9 @@ of cancer phylogeny into workflow building blocks including:
 - Sample WDL workflows that contain the above tasks.
 - Example scripts to run the workflows using miniwdl at the commandline, using example data from this repo.
 
+## Installation
 
+Requires miniwdl 0.9
 
 
 

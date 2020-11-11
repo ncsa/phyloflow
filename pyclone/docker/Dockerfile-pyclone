@@ -1,3 +1,10 @@
+# This container installs pyclone, pyclone-vi, and the local python 
+# code from phyloflow/pyclone/code/
+# Conda is used to manage the python env(s) inside the container:
+# Use 'conda run ..' with either 'pyclone' or 'pyclone-vi' to use
+# those packages.
+
+
 FROM ubuntu:20.04
 
 ENV HOME=/home/dockeruser
@@ -50,10 +57,6 @@ RUN echo "conda activate base" >> /home/dockeruser/.bashrc
 RUN conda config --add channels bioconda
 RUN conda config --add channels conda-forge
 
-#copy the phyloflow/pyclone/code directory into the container. It contains the
-#script that runs automatically when the container starts
-COPY ./code /code
-
 #######
 ## Begin pyclone specific install
 ######
@@ -94,7 +97,12 @@ ENV RUN_IN_CONDA="bash -i -c "
 #this will print all installed packages and their versions
 RUN $RUN_IN_CONDA 'conda list'
 
+
+# copy the phyloflow/pyclone/code directory into the container. 
+# NOTE this says the local code is in '.' b/c the build_pyclone_container.sh script 
+# uses  '..' as the context for the build process. Necessary to avoid this issue:
+# https://stackoverflow.com/questions/27068596/how-to-include-files-outside-of-dockers-build-context
+COPY ./code /code
+
 RUN ls -al /
 RUN ls -al /code/
-
-
