@@ -11,9 +11,10 @@ task pyclone_clustering{
 	output {
 		File response = stdout()
 		File err_response = stderr()
-		#File clusters = 'clusters_from_sample.yml'
 
-		Array[File] outputs = glob("*.yaml")
+		#Array[File] outputs = glob("*.yaml")
+		File clusters = 'tables/cluster.tsv'
+		File loci = 'tables/loci.tsv'
 		}
 
 	runtime {
