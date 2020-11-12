@@ -8,5 +8,3 @@
 FILE=./example_data/pyclone_vi/synthetic.tsv
 miniwdl run --dir=runs/ pyclone/pyclone-vi-task.wdl mutations_tsv=$FILE
 
-
-

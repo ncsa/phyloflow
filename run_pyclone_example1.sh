@@ -18,5 +18,3 @@ PARAMS=${FILES_ARY[@]/#/tsv_sample_files=}
 #echo "Final Params to pass to wdl: $PARAMS"
 miniwdl run --dir=runs/ pyclone/pyclone-task.wdl $PARAMS
 
-
-
