@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # !!!! THIS MUST BE RUN WITH BASH, NOT sh !!!!
+# eg.
+#	> bash run_pyclone_example1.sh
 
 # Run PyClone against the example data that it comes with. 
 # There is no translation step as the inputs are already prepared by the PyClone authors.
