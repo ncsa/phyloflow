@@ -58,14 +58,16 @@ RUN conda config --add channels bioconda
 RUN conda config --add channels conda-forge
 
 #######
-## Begin pyclone specific install
+## Begin pyclone-vi specific install
 ######
-RUN conda create -n pyclone 
-RUN conda install --yes --name pyclone pyclone
-RUN conda install --yes --name pyclone tk
+
+RUN wget https://raw.githubusercontent.com/Roth-Lab/pyclone-vi/master/requirements.txt
+RUN conda create -n pyclone-vi --file requirements.txt --yes
+RUN conda run -v -n pyclone-vi pip install -v git+https://github.com/aroth85/pyclone-vi.git
+
 
 #######
-## End pyclone specific install
+## End pyclone-vi specific install
 #####
 
 #try to reduce the size of the image
@@ -83,7 +85,6 @@ ENV RUN_IN_CONDA="bash -i -c "
 
 #this will print all installed packages and their versions
 RUN $RUN_IN_CONDA 'conda list'
-
 
 # copy the phyloflow/pyclone/code directory into the container. 
 # NOTE this says the local code is in '.' b/c the build_pyclone_container.sh script 

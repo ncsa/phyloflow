@@ -19,7 +19,7 @@ task pyclone_vi_clustering{
 		}
 
 	runtime {
-		docker: 'phyloflow/pyclone:latest'
+		docker: 'phyloflow/pyclone-vi:latest'
 		}
 }
 

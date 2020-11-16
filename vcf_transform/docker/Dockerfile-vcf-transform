@@ -29,15 +29,6 @@ RUN apt-get -qq update && \
         bzip2 \
         ca-certificates
 
-#put a fake screen in the container so pyclone can import tkinter for a graph it makes
-# https://stackoverflow.com/questions/46613117/why-does-conda-install-tk-not-work-in-my-docker-container-even-though-it-says-it
-RUN apt-get -qq install --no-install-recommends \
-		xvfb 
-
-#pyclone-vi doesn't have a real conda package so the source must be installed over pip using git
-RUN apt-get -qq install --no-install-recommends \
-		git	
-
 
 #####
 ##Above this line could be a base image
@@ -45,8 +36,8 @@ RUN apt-get -qq install --no-install-recommends \
 ## have a common base image that supports that
 ######
 
-#RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh  -O ~/miniconda.sh
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda2-py27_4.8.3-Linux-x86_64.sh  -O ~/miniconda.sh
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh  -O ~/miniconda.sh
+#RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda2-py27_4.8.3-Linux-x86_64.sh  -O ~/miniconda.sh
 
 RUN /bin/bash ~/miniconda.sh -b -p /opt/conda
 RUN rm ~/miniconda.sh
@@ -58,16 +49,14 @@ RUN conda config --add channels bioconda
 RUN conda config --add channels conda-forge
 
 #######
-## Begin pyclone specific install
+## Begin vcf-transform specific install
 ######
-RUN conda create -n pyclone 
-RUN conda install --yes --name pyclone pyclone
-RUN conda install --yes --name pyclone tk
+RUN conda create -n vcf-transform
+RUN conda install --yes --name vcf-transform pyvcf
 
 #######
 ## End pyclone specific install
 #####
-
 #try to reduce the size of the image
 RUN conda clean --all --yes
 
