@@ -9,5 +9,5 @@
 
 echo "vcf_transform_entrypoint.sh: begin."
 echo "vcf_transform_entrypoint.sh: list of input args from wdl runtime: $@"
-conda run -n vcf-transform python -B -m py_code.main $1 $2 $3 $4
+conda run -n vcf-transform python -B -m py_code.main $1 $2 $3 $4 $5 $6
 echo "vcf_transform_entrypoint.sh: finished."

@@ -2,6 +2,7 @@ from dataclasses import dataclass, asdict
 from typing import List
 import vcf
 import json
+import csv
 
 @dataclass
 class Mutation(object):
@@ -59,16 +60,33 @@ class Mutation(object):
         ref = str(vcf_record.REF)
         mid = chrom + ":" + pos + ":" + ref
         return mid
-        
 
 
-
-
-def write_pyclone_vi_input(out_fn:str, mutations:List[Mutation]) -> None:
+def write_mutations_json(out_fn:str, mutations:List[Mutation]) -> None:
     print("writing mutations as json to : " + str(out_fn))
     jd = [asdict(x) for x in mutations]
     with open(out_fn, 'w') as outfile:
         json.dump(jd, outfile, indent=4)
+    return
+
+def write_pyclone_vi_input(out_fn:str, mutations:List[Mutation]) -> None:
+    print("writing mutations as pyclone-vi input format: " + str(out_fn))
+
+    fieldnames = ['sample_id', 'mutation_id', 'ref_counts', 'alt_counts',
+        'major_cn', 'minor_cn', 'normal_cn']
+
+    with open(out_fn, 'w', newline='') as csvfile:
+
+        writer = csv.DictWriter(csvfile, 
+            fieldnames=fieldnames, 
+            delimiter='\t', 
+            quotechar='"', 
+            quoting=csv.QUOTE_MINIMAL,
+            extrasaction='ignore')
+
+        writer.writeheader()
+        for m in mutations:
+            writer.writerow(asdict(m))
     return
 
 

@@ -1,6 +1,7 @@
 import sys
 import vcf
 import json
+from pathlib import Path
 
 import py_code.mutation as mutation
 from py_code.mutation import Mutation
@@ -14,26 +15,20 @@ def main(args):
         raise Exception('Can only understand vcf from mutect')
 
     vcf_fn:str = args[1]
-    sample_id = vcf_fn
     header_json_out_fn = args[2]
-    pyclone_vi_out_fn = args[3]
+    mutations_json_out_fn = args[3]
+    pyclone_vi_out_fn = args[4]
+    pyclone_out_dirname = args[5]
 
     vcf_reader:vcf.Reader = load_vcf(vcf_fn)
 
     write_headers_as_json(vcf_reader, header_json_out_fn)
 
-    record0 = next(vcf_reader)
-    print(str(record0))
+    sample_id = extract_sample_id(vcf_fn)
 
-    mut0 = Mutation.from_mutect_vcf_record(sample_id, record0)
-    print(str(mut0))
+    mutations = [Mutation.from_mutect_vcf_record(sample_id, row) for row in vcf_reader]
 
-    mutations = list()
-    mutations.append(mut0)
-    for row in vcf_reader:
-        mut = Mutation.from_mutect_vcf_record(sample_id, row)
-        mutations.append(mut)
-
+    mutation.write_mutations_json(mutations_json_out_fn, mutations)
     mutation.write_pyclone_vi_input(pyclone_vi_out_fn, mutations)
 
     success = True
@@ -47,7 +42,15 @@ def load_vcf(vcf_fn:str) -> vcf.Reader:
     reader = vcf.Reader(open(vcf_fn, 'r'))
     return reader
 
-
+def extract_sample_id(input_filename):
+    """
+    infers a sample_id from the input filename of the vcf file.
+    The result is the basename without the suffix (.vcf)
+    """
+    p = Path(input_filename)
+    sample_id = p.stem
+    return sample_id
+    
 def pp_jsons(jdata) -> str:
     """
     convert a data structure to json and create a pretty print string.
