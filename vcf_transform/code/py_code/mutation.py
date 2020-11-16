@@ -3,6 +3,7 @@ from typing import List
 import vcf
 import json
 import csv
+from pathlib import Path
 
 @dataclass
 class Mutation(object):
@@ -70,6 +71,10 @@ def write_mutations_json(out_fn:str, mutations:List[Mutation]) -> None:
     return
 
 def write_pyclone_vi_input(out_fn:str, mutations:List[Mutation]) -> None:
+    """
+    write the mutations to a single tsv file, including all samples, as described
+    by the pyclone-vi docs: https://github.com/Roth-Lab/pyclone-vi
+    """
     print("writing mutations as pyclone-vi input format: " + str(out_fn))
 
     fieldnames = ['sample_id', 'mutation_id', 'ref_counts', 'alt_counts',
@@ -77,10 +82,10 @@ def write_pyclone_vi_input(out_fn:str, mutations:List[Mutation]) -> None:
 
     with open(out_fn, 'w', newline='') as csvfile:
 
-        writer = csv.DictWriter(csvfile, 
-            fieldnames=fieldnames, 
-            delimiter='\t', 
-            quotechar='"', 
+        writer = csv.DictWriter(csvfile,
+            fieldnames=fieldnames,
+            delimiter='\t',
+            quotechar='"',
             quoting=csv.QUOTE_MINIMAL,
             extrasaction='ignore')
 
@@ -89,6 +94,40 @@ def write_pyclone_vi_input(out_fn:str, mutations:List[Mutation]) -> None:
             writer.writerow(asdict(m))
     return
 
+def write_pyclone_inputs(out_dirname:str, mutations:List[Mutation]) -> None:
+    """
+    write the mutations to a set of tsv files, one per sample, as described
+    by the pyclone docs: https://github.com/Roth-Lab/pyclone
+    """
+    print("writing mutations as pyclone input format to: " + str(out_dirname))
+
+    fieldnames = ['mutation_id', 'ref_counts', 'alt_counts',
+        'major_cn', 'minor_cn', 'normal_cn']
+
+    #index the mutations by sample_id
+    mutations_map = dict()
+    for m in mutations:
+        sample_id = m.sample_id
+        if not sample_id in mutations_map:
+            mutations_map[sample_id] = list()
+        mutations_map[sample_id].append(m)
+
+    for sample_id in mutations_map:
+        out_fn = Path(out_dirname, (sample_id + '.tsv'))
+
+        with open(out_fn, 'w', newline='') as csvfile:
+
+            writer = csv.DictWriter(csvfile,
+                fieldnames=fieldnames,
+                delimiter='\t',
+                quotechar='"',
+                quoting=csv.QUOTE_MINIMAL,
+                extrasaction='ignore')
+
+            writer.writeheader()
+            for m in mutations_map[sample_id]:
+                writer.writerow(asdict(m))
+    return
 
 """
 PYCLONE-VI inputs

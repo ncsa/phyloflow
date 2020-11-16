@@ -7,6 +7,7 @@ task vcf_transform{
 
 	command {
 		pwd
+		mkdir pyclone_samples
 		out_dir=$(pwd)
 		cd /code
 		sh vcf_transform_entrypoint.sh ${vcf_type} ${vcf_file} \

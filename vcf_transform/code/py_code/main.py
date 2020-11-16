@@ -30,6 +30,7 @@ def main(args):
 
     mutation.write_mutations_json(mutations_json_out_fn, mutations)
     mutation.write_pyclone_vi_input(pyclone_vi_out_fn, mutations)
+    mutation.write_pyclone_inputs(pyclone_out_dirname, mutations)
 
     success = True
     return success
