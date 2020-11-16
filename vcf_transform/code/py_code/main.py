@@ -2,6 +2,9 @@ import sys
 import vcf
 import json
 
+import py_code.mutation as mutation
+from py_code.mutation import Mutation
+
 def main(args):
     success = False
     print("main.py: got the args: " + str(args))
@@ -11,19 +14,30 @@ def main(args):
         raise Exception('Can only understand vcf from mutect')
 
     vcf_fn:str = args[1]
+    sample_id = vcf_fn
     header_json_out_fn = args[2]
+    pyclone_vi_out_fn = args[3]
 
     vcf_reader:vcf.Reader = load_vcf(vcf_fn)
 
     write_headers_as_json(vcf_reader, header_json_out_fn)
 
-    #record0 = next(vcf_reader)
-    #print(record0)
+    record0 = next(vcf_reader)
+    print(str(record0))
+
+    mut0 = Mutation.from_mutect_vcf_record(sample_id, record0)
+    print(str(mut0))
+
+    mutations = list()
+    mutations.append(mut0)
+    for row in vcf_reader:
+        mut = Mutation.from_mutect_vcf_record(sample_id, row)
+        mutations.append(mut)
+
+    mutation.write_pyclone_vi_input(pyclone_vi_out_fn, mutations)
 
     success = True
     return success
-
-
 
 def load_vcf(vcf_fn:str) -> vcf.Reader:
     """ 

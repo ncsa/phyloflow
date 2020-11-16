@@ -1,8 +1,6 @@
-# This container installs pyclone, pyclone-vi, and the local python 
-# code from phyloflow/pyclone/code/
+# This container installs pyVCF and the code in phyloflow/vcf_transform/code
 # Conda is used to manage the python env(s) inside the container:
-# Use 'conda run ..' with either 'pyclone' or 'pyclone-vi' to use
-# those packages.
+# Use 'conda run ..' with 'vcf-transform'
 
 
 FROM ubuntu:20.04

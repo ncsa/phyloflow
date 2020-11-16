@@ -9,7 +9,9 @@ task vcf_transform{
 		pwd
 		out_dir=$(pwd)
 		cd /code
-		sh vcf_transform_entrypoint.sh ${vcf_type} ${vcf_file} $out_dir/headers_as_json.txt
+		sh vcf_transform_entrypoint.sh ${vcf_type} ${vcf_file} \
+			$out_dir/headers_as_json.txt \
+			$out_dir/pyclone_vi_formatted.tsv
 		pwd
 		ls -al
 		cd ..
@@ -21,9 +23,7 @@ task vcf_transform{
 		File response = stdout()
 		File err_response = stderr()
 		File headers = 'headers_as_json.txt'
-
-		#File clusters = 'tables/cluster.tsv'
-		#File loci = 'tables/loci.tsv'
+		File pyclone_vi_formatted = 'pyclone_vi_formatted.tsv'
 		}
 
 	runtime {
