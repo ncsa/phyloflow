@@ -10,11 +10,90 @@ of cancer phylogeny into workflow building blocks including:
 - Sample WDL workflows that contain the above tasks.
 - Example scripts to run the workflows using miniwdl at the commandline, using example data from this repo.
 
+This is currently a *PROTOTYPE* and is meant to be a demonstration of WDL and
+Docker to experiment with deployment options, not to produce fine-tuned or even
+believable results without additional QC.
+
+## vcf_to_clusters
+
+This repo currently contains the WDL tasks and workflow to:
+1. Load a VCF file produced by 'mutect'.
+2. Transform the VCF's mutations into the input formats of 'pyclone' and 'pyclone-vi' as a task.
+3. Run 'pyclone' and 'pyclone-vi' as separate tasks concurrently.
+4. Collect the output tsv files which contain clusters of the mutations. They should be
+similar results but pyclone-vi will complete much faster.
+
 ## Installation
 
-Requires miniwdl 0.9
+### Prereqs
+- Example scripts require miniwdl 0.9. If you have conda installed:
+        
+        conda install miniwdl
+
+- Requires docker installed on the local machine, with the current user in group 'docker'
+
+### Docker images
+
+The wdl tasks each have their own docker image that must be stored locally. You may either pull
+the images from the NCSA's docker hub or build from Dockerfile's using the provided scripts.
+
+To download and install from NCSA's hub, use the provided script:
+
+    sh pull_docker_images.sh
+
+OR to build the images yourself:
+
+    cd pyclone/docker 
+    sh build_pyclone_container.sh
+
+    cd ../../pyclone_vi/docker
+    sh build_pyclone_vi_container.sh
+
+    cd ../../vcf_transform/docker
+    sh build_vcf_transform_container.sh
+
+## Isolated Task Examples
+Each WDL Task has a script of the form "run_<taskname>_example1.sh" which runs
+the task in isolation against a data file in the example_data/ directory. These
+scripts rely on miniwdl and docker to be installed as described in Installation above.
+
+For example:
+
+    bash run_pyclone_vi_example1.sh
+
+will run pyclone to cluster the mutations per sample in the input synthetic.tsv
+file. This will create the miniwdl output in the runs/ directory:
+
+     $ tree runs/_LAST
+     runs/_LAST
+     ├── command
+     ├── inputs.json
+     ├── out
+     │   ├── cluster_assignment
+     │   │   └── cluster_assignment.tsv -> ../../work/cluster_assignment.tsv
+     │   ├── err_response
+     │   │   └── stderr.txt -> ../../stderr.txt
+     │   └── response
+     │       └── stdout.txt -> ../../stdout.txt
+     ├── outputs.json
+     ├── rerun
+     ├── stderr.txt
+     ├── stdout.txt
+     ├── task.log
+     ├── wdl
+     │   └── pyclone-vi-task.wdl
+     └── work
+         ├── _miniwdl_inputs
+             │   └── 0
+                 │       └── synthetic.tsv
+                     ├── cluster_assignment.tsv
+                         └── cluster_fit.hdf5
+
+                         8 directories, 14 files
 
 
+
+## Workflow Example
 
 ## References
 

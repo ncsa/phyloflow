@@ -6,8 +6,6 @@ task vcf_to_pyclonevi_format{
     input {
 		File vcf_input_file
 		String vcf_type #basically pipeline name that produced it, ['mutect', 'strelka', etc]
-
-		File tsv_sample #not a vcf, a tsv already in the format needed by pyclone-vi
     	}
 
 	command {
@@ -60,7 +58,6 @@ workflow pyclone_vi{
 
 		File vcf_input_file
 		String vcf_type
-		File tsv_sample
 
 	}
     call  vcf_to_pyclonevi_format as step1 {
