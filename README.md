@@ -14,7 +14,7 @@ This is currently a *PROTOTYPE* and is meant to be a demonstration of WDL and
 Docker to experiment with deployment options, not to produce fine-tuned or even
 believable results without additional QC.
 
-## vcf_to_clusters
+## Workflow1: vcf_to_clusters
 
 This repo currently contains the WDL tasks and workflow to:
 1. Load a VCF file produced by 'mutect'.
@@ -53,7 +53,7 @@ OR to build the images yourself:
     sh build_vcf_transform_container.sh
 
 ## Isolated Task Examples
-Each WDL Task has a script of the form "run_<taskname>_example1.sh" which runs
+Each WDL Task has a script of the form "run_{taskname}_example1.sh" which runs
 the task in isolation against a data file in the example_data/ directory. These
 scripts rely on miniwdl and docker to be installed as described in Installation above.
 
@@ -61,7 +61,7 @@ For example:
 
     bash run_pyclone_vi_example1.sh
 
-will run pyclone to cluster the mutations per sample in the input synthetic.tsv
+will run pyclone-vi to cluster the mutations per sample in the input synthetic.tsv
 file. This will create the miniwdl output in the runs/ directory:
 
      $ tree runs/_LAST
@@ -94,6 +94,16 @@ file. This will create the miniwdl output in the runs/ directory:
 
 
 ## Workflow Example
+
+A full example of running the vcf_to\_clusters workflow can found in run\_workflows_example1.sh
+
+    bash run_workflow_example1.sh
+
+This will run the full workflow with the same example VCF as run_vcf_transform_example1.sh, but will pass the outputs
+to the downstream clustering algorithms pyclone and pyclone-vi.
+
+
+When complete, the output directory structures will look like:
 
 ## References
 

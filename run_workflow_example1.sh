@@ -1,7 +1,10 @@
- miniwdl run --dir=runs/ pyclonevi.wdl \
- 	vcf_input_file=./example_data/mek_lab_vcfs/A25.mutect2.vcf \
-	vcf_type=mutect \
-	tsv_sample=./example_data/pyclone_vi/synthetic.tsv
+#!/bin/bash
 
+# eg.
+#	> bash run_workflow_example1.sh
 
+# Run vcf_transform against the example data that it comes with. Will produce outputs for
+# both pyclone and pyclone_vi to input.
 
+FILE=./example_data/mek_lab_vcfs/A25.mutect2.vcf
+miniwdl run --dir=runs/ workflows/vcf_to_clusters.wdl vcf_type=mutect vcf_file=$FILE
