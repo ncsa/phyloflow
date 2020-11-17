@@ -10,7 +10,7 @@ of cancer phylogeny into workflow building blocks including:
 - Sample WDL workflows that contain the above tasks.
 - Example scripts to run the workflows using miniwdl at the commandline, using example data from this repo.
 
-This is currently a *PROTOTYPE* and is meant to be a demonstration of WDL and
+This is currently a **_prototype_** and is meant to be a demonstration of WDL and
 Docker to experiment with deployment options, not to produce fine-tuned or even
 believable results without additional QC.
 
@@ -53,44 +53,40 @@ OR to build the images yourself:
     sh build_vcf_transform_container.sh
 
 ## Isolated Task Examples
-Each WDL Task has a script of the form "run_{taskname}_example1.sh" which runs
-the task in isolation against a data file in the example_data/ directory. These
+Each WDL Task has a script of the form `run_{taskname}_example1.sh` which runs
+the task in isolation against a data file in the `example_data/` directory. These
 scripts rely on miniwdl and docker to be installed as described in Installation above.
 
 For example:
 
     bash run_pyclone_vi_example1.sh
 
-will run pyclone-vi to cluster the mutations per sample in the input synthetic.tsv
-file. This will create the miniwdl output in the runs/ directory:
+will run pyclone-vi to cluster the mutations per sample using `example_data/pyclone-vi/synthetic.tsv`
+as the input mutations file. This will create the miniwdl output in the runs/ directory:
 
      $ tree runs/_LAST
-     runs/_LAST
-     ├── command
-     ├── inputs.json
-     ├── out
-     │   ├── cluster_assignment
-     │   │   └── cluster_assignment.tsv -> ../../work/cluster_assignment.tsv
-     │   ├── err_response
-     │   │   └── stderr.txt -> ../../stderr.txt
-     │   └── response
-     │       └── stdout.txt -> ../../stdout.txt
-     ├── outputs.json
-     ├── rerun
-     ├── stderr.txt
-     ├── stdout.txt
-     ├── task.log
-     ├── wdl
-     │   └── pyclone-vi-task.wdl
-     └── work
-         ├── _miniwdl_inputs
-             │   └── 0
-                 │       └── synthetic.tsv
-                     ├── cluster_assignment.tsv
-                         └── cluster_fit.hdf5
-
-                         8 directories, 14 files
-
+    ├── command
+    ├── inputs.json
+    ├── out
+    │   ├── cluster_assignment
+    │   │   └── cluster_assignment.tsv -> ../../work/cluster_assignment.tsv
+    │   ├── err_response
+    │   │   └── stderr.txt -> ../../stderr.txt
+    │   └── response
+    │       └── stdout.txt -> ../../stdout.txt
+    ├── outputs.json
+    ├── rerun
+    ├── stderr.txt
+    ├── stdout.txt
+    ├── task.log
+    ├── wdl
+    │   └── pyclone-vi-task.wdl
+    └── work
+        ├── _miniwdl_inputs
+        │   └── 0
+        │       └── synthetic.tsv
+        ├── cluster_assignment.tsv
+        └── cluster_fit.hdf5
 
 ## References
 
@@ -98,11 +94,11 @@ Workflow Description Language (WDL)
 
 ## Workflow Example
 
-A full example of running the vcf_to\_clusters workflow can found in run\_workflows_example1.sh
+A full example of running the `vcf_to_clusters` workflow can found in `run_workflows_example1.sh`
 
     bash run_workflow_example1.sh
 
-This will run the full workflow with the same example VCF as run_vcf_transform_example1.sh, but will pass the outputs
+This will run the full workflow with the same example VCF as `run_vcf_transform_example1.sh`, but will pass the outputs
 to the downstream clustering algorithms pyclone and pyclone-vi.
 
 WARNING: The pyclone step takes roughly 5hours to complete.
