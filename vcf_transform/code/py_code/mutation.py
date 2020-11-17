@@ -127,34 +127,4 @@ def write_pyclone_inputs(out_dirname:str, mutations:List[Mutation]) -> None:
                 writer.writerow(md)
     return
 
-"""
-PYCLONE-VI inputs
-
-
-
-mutation_id - Unique identifier for the mutation. This is free form but should match across all samples.
-
-Note: PyClone-VI will remove any mutations without entries for all detected samples. If you have mutations with no data in some samples set their ref/alt counts to 0 for the corresponding sample.
-
-sample_id - Unique identifier for the sample.
-
-ref_counts - Number of reads matching the reference allele.
-
-alt_counts - Number of reads matching the alternate allele.
-
-major_cn - Major copy number of segment overlapping mutation.
-
-minor_cn - Minor copy number of segment overlapping mutation.
-
-normal_cn - Total copy number of segment in healthy tissue. For autosome this will be two and male sex chromosomes one.
-
-You can include the following optional columns.
-
-tumour_content - The tumour content (cellularity) of the sample. Default value is 1.0 if column is not present.
-
-Note: In principle this could be different for each mutations/sample. However it most cases it should be the same for all mutations in a sample.
-
-error_rate - Sequencing error rate. Default value is 0.001 if column is not present.
-"""
-
 

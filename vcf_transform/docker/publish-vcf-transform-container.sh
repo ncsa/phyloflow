@@ -7,3 +7,4 @@
 ## 
 IMAGE_TAG_TO_PUSH=$1
 docker push hub.ncsa.illinois.edu/phyloflow/vcf-transform:$IMAGE_TAG_TO_PUSH
+docker push hub.ncsa.illinois.edu/phyloflow/vcf-transform:latest
