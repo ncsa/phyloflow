@@ -49,7 +49,7 @@ def extract_sample_id(input_filename):
     The result is the basename without the suffix (.vcf)
     """
     p = Path(input_filename)
-    sample_id = p.stem
+    sample_id = (p.stem)
     return sample_id
     
 def pp_jsons(jdata) -> str:

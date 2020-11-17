@@ -92,6 +92,9 @@ file. This will create the miniwdl output in the runs/ directory:
                          8 directories, 14 files
 
 
+## References
+
+Workflow Description Language (WDL)
 
 ## Workflow Example
 
@@ -102,9 +105,112 @@ A full example of running the vcf_to\_clusters workflow can found in run\_workfl
 This will run the full workflow with the same example VCF as run_vcf_transform_example1.sh, but will pass the outputs
 to the downstream clustering algorithms pyclone and pyclone-vi.
 
+WARNING: The pyclone step takes roughly 5hours to complete.
+
 
 When complete, the output directory structures will look like:
 
-## References
+    $ tree runs/_LAST
+    ├── call-step1
+    │   ├── command
+    │   ├── inputs.json
+    │   ├── out
+    │   │   ├── err_response
+    │   │   │   └── stderr.txt -> ../../stderr.txt
+    │   │   ├── headers_json
+    │   │   │   └── headers.json -> ../../work/headers.json
+    │   │   ├── mutations_json
+    │   │   │   └── mutations.json -> ../../work/mutations.json
+    │   │   ├── pyclone_formatted_tsvs
+    │   │   │   └── 0
+    │   │   │       └── A25.mutect2.tsv -> ../../../work/pyclone_samples/A25.mutect2.tsv
+    │   │   ├── pyclone_vi_formatted_tsv
+    │   │   │   └── pyclone_vi_formatted.tsv -> ../../work/pyclone_vi_formatted.tsv
+    │   │   └── response
+    │   │       └── stdout.txt -> ../../stdout.txt
+    │   ├── outputs.json
+    │   ├── stderr.txt
+    │   ├── stdout.txt
+    │   ├── task.log
+    │   └── work
+    │       ├── _miniwdl_inputs
+    │       │   └── 0
+    │       │       └── A25.mutect2.vcf
+    │       ├── headers.json
+    │       ├── mutations.json
+    │       ├── pyclone_samples
+    │       │   └── A25.mutect2.tsv
+    │       └── pyclone_vi_formatted.tsv
+    ├── call-step2
+    │   ├── command
+    │   ├── inputs.json
+    │   ├── out
+    │   │   ├── clusters
+    │   │   │   └── cluster.tsv -> ../../work/tables/cluster.tsv
+    │   │   ├── err_response
+    │   │   │   └── stderr.txt -> ../../stderr.txt
+    │   │   ├── loci
+    │   │   │   └── loci.tsv -> ../../work/tables/loci.tsv
+    │   │   └── response
+    │   │       └── stdout.txt -> ../../stdout.txt
+    │   ├── outputs.json
+    │   ├── stderr.txt
+    │   ├── stdout.txt
+    │   ├── task.log
+    │   └── work
+    │       ├── _miniwdl_inputs
+    │       │   └── 0
+    │       │       └── A25.mutect2.tsv
+    │       ├── config.yaml
+    │       ├── plots
+    │       │   └── cluster
+    │       ├── tables
+    │       │   ├── cluster.tsv
+    │       │   └── loci.tsv
+    │       ├── trace
+    │       │   ├── A25.mutect2.cellular_prevalence.tsv.bz2
+    │       │   ├── alpha.tsv.bz2
+    │       │   ├── labels.tsv.bz2
+    │       │   └── precision.tsv.bz2
+    │       └── yaml
+    │           └── A25.mutect2.yaml
+    ├── call-step3
+    │   ├── command
+    │   ├── inputs.json
+    │   ├── out
+    │   │   ├── cluster_assignment
+    │   │   │   └── cluster_assignment.tsv -> ../../work/cluster_assignment.tsv
+    │   │   ├── err_response
+    │   │   │   └── stderr.txt -> ../../stderr.txt
+    │   │   └── response
+    │   │       └── stdout.txt -> ../../stdout.txt
+    │   ├── outputs.json
+    │   ├── stderr.txt
+    │   ├── stdout.txt
+    │   ├── task.log
+    │   └── work
+    │       ├── _miniwdl_inputs
+    │       │   └── 0
+    │       │       └── pyclone_vi_formatted.tsv
+    │       ├── cluster_assignment.tsv
+    │       └── cluster_fit.hdf5
+    ├── inputs.json
+    ├── out
+    │   ├── pyclone_clusters
+    │   │   └── loci.tsv -> ../../call-step2/work/tables/loci.tsv
+    │   └── pyclone_vi_clusters
+    │       └── cluster_assignment.tsv -> ../../call-step3/work/cluster_assignment.tsv
+    ├── outputs.json
+    ├── rerun
+    ├── wdl
+    │   ├── pyclone
+    │   │   └── pyclone-task.wdl
+    │   ├── pyclone_vi
+    │   │   └── pyclone-vi-task.wdl
+    │   ├── vcf_transform
+    │   │   └── vcf-transform-task.wdl
+    │   └── workflows
+    │       └── vcf_to_clusters.wdl
+    └── workflow.log
 
-Workflow Description Language (WDL)
+    43 directories, 58 files

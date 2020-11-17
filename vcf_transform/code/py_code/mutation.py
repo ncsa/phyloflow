@@ -13,7 +13,7 @@ class Mutation(object):
     sample_id:str
     mutation_id:str
     ref_counts:int
-    alt_counts:int
+    alt_counts:int #'var_counts' in some contexts
     major_cn:int = 2 #FIXME: compute real value
     minor_cn:int = 2 #FIXME: compute real value
     normal_cn:int = 2 #FIXME: compute real value
@@ -28,16 +28,10 @@ class Mutation(object):
 
         mutation_id = Mutation._construct_mutation_id(vcf_record)
 
-        #print("Calls in record: ")
-        #for c in vcf_record.samples:
-        #    print(str(c))
-
         #A25 -> AD 
         #TODO: should these be parameters, or are they hardcoded for 'mutect'?
         tumor_call = vcf_record.genotype('A25')
         call_data = tumor_call.data
-        #print(str(call_data))
-        #print(str(type(call_data)))
         counts = call_data.AD
         ref_counts =  counts[0]
         alt_counts = counts[1] 
@@ -59,7 +53,8 @@ class Mutation(object):
         chrom = str(vcf_record.CHROM)
         pos = str(vcf_record.POS)
         ref = str(vcf_record.REF)
-        mid = chrom + ":" + pos + ":" + ref
+        #mid = (chrom + ":" + pos + ":" + ref).decode('utf-8')
+        mid = (chrom + ":" + pos)
         return mid
 
 
@@ -101,7 +96,7 @@ def write_pyclone_inputs(out_dirname:str, mutations:List[Mutation]) -> None:
     """
     print("writing mutations as pyclone input format to: " + str(out_dirname))
 
-    fieldnames = ['mutation_id', 'ref_counts', 'alt_counts',
+    fieldnames = ['mutation_id', 'ref_counts', 'var_counts',
         'major_cn', 'minor_cn', 'normal_cn']
 
     #index the mutations by sample_id
@@ -126,7 +121,10 @@ def write_pyclone_inputs(out_dirname:str, mutations:List[Mutation]) -> None:
 
             writer.writeheader()
             for m in mutations_map[sample_id]:
-                writer.writerow(asdict(m))
+                md  = asdict(m)
+                #pyclone calls them 'var' not 'alt'
+                md['var_counts'] = md['alt_counts']
+                writer.writerow(md)
     return
 
 """

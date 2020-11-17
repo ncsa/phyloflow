@@ -7,4 +7,4 @@
 # both pyclone and pyclone_vi to input.
 
 FILE=./example_data/mek_lab_vcfs/A25.mutect2.vcf
-miniwdl run --dir=runs/ workflows/vcf_to_clusters.wdl vcf_type=mutect vcf_file=$FILE
+miniwdl run --dir=runs/ workflows/vcf_to_clusters.wdl vcf_type=mutect vcf_input_file=$FILE
