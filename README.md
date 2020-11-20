@@ -101,7 +101,7 @@ A full example of running the `vcf_to_clusters` workflow can found in `run_workf
 This will run the full workflow with the same example VCF as `run_vcf_transform_example1.sh`, but will pass the outputs
 to the downstream clustering algorithms pyclone and pyclone-vi.
 
-WARNING: The pyclone step takes roughly 5hours to complete.
+WARNING: The pyclone step takes roughly an hour to complete.
 
 
 When complete, the output directory structures will look like:
