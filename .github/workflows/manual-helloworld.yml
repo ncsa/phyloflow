@@ -22,9 +22,7 @@ jobs:
     steps:
     - name: Build pyclone Docker Image
       run: cd pyclone && sh build_pyclone.sh
-	- name: Tag pyclone Docker Image
+    - name: Tag pyclone Docker Image
       run: cd pyclone && sh tag_latest_image.sh ${{ github.event.inputs.tag_version}}
     - name: Push tagged image to hub.ncsa.illinois.edu
       run: cd pyclone && sh publish_cyclone.sh ${{ github.event.inputs.tag_version}}
-
-	
