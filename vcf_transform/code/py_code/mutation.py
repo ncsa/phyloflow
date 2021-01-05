@@ -63,7 +63,7 @@ class Mutation(object):
                     alt_counts = counts[1]
 
                     mutation_list.append(Mutation(
-                        sample_id=sample_id, 
+                        sample_id=sample, 
                         mutation_id=mutation_id, 
                         ref_counts=ref_counts, 
                         alt_counts=alt_counts))
