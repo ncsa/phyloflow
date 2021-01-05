@@ -85,10 +85,10 @@ class Mutation(object):
                     mutation_id = Mutation._construct_mutation_id(rec)
                     tumor_call = rec.genotype(sample)
                     call_data = tumor_call.data
-                    DP = int(call_data.DP)
-                    TCOUNT = int(call_data.TCOUNT)
-                    ref_counts = DP - TCOUNT
-                    alt_counts = TCOUNT
+                    depth = int(call_data.DP)
+                    tcount = int(call_data.TCOUNT)
+                    ref_counts = depth - tcount
+                    alt_counts = tcount
 
                     mutation_list.append(Mutation(
                         sample_id=sample, 

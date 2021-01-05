@@ -11,7 +11,7 @@ def main(args):
     print("main.py: got the args: " + str(args))
 
     vcf_type:str = args[0]
-    if not vcf_type in ['mutect', 'moss']:
+    if vcf_type not in ['mutect', 'moss']:
         raise Exception('Can only understand vcf from mutect or moss')
 
     vcf_fn:str = args[1]
