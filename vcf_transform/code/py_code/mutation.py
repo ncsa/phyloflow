@@ -14,12 +14,12 @@ class Mutation(object):
     mutation_id:str
     ref_counts:int
     alt_counts:int #'var_counts' in some contexts
-    major_cn:int = 2 #FIXME: compute real value
-    minor_cn:int = 2 #FIXME: compute real value
+    major_cn:int = 1 #FIXME: compute real value
+    minor_cn:int = 1 #FIXME: compute real value
     normal_cn:int = 2 #FIXME: compute real value
 
     @staticmethod
-    def from_mutect_vcf_record(sample_id:str, vcf_record:vcf.model._Record):
+    def from_mutect_vcf_record(sample_id:str, vcf_record:vcf.model._Record, vcf_reader: vcf.Reader):
         """
         initialize a Mutation from a _Record (row) object returned 
         by a vcf.Reader. The vcf file must contain the 'mutect' output 
@@ -28,13 +28,12 @@ class Mutation(object):
 
         mutation_id = Mutation._construct_mutation_id(vcf_record)
 
-        #A25 -> AD 
-        #TODO: should these be parameters, or are they hardcoded for 'mutect'?
-        tumor_call = vcf_record.genotype('A25')
+        tumor_sample = vcf_reader.metadata["tumor_sample"]
+        tumor_call = vcf_record.genotype(tumor_sample)
         call_data = tumor_call.data
         counts = call_data.AD
         ref_counts =  counts[0]
-        alt_counts = counts[1] 
+        alt_counts = counts[1]
 
         mut = Mutation(
             sample_id=sample_id, 
@@ -43,6 +42,61 @@ class Mutation(object):
             alt_counts=alt_counts)
 
         return mut
+
+    @staticmethod
+    def mutation_list_from_mutect(sample_id:str, vcf_reader: vcf.Reader):
+        """
+        Generate a list of Mutations from VCF file
+        """
+
+        mutation_list = []
+        print(vcf_reader.metadata)
+        tumor_samples = vcf_reader.metadata["tumor_sample"]
+        for rec in vcf_reader:
+            if len(rec.FILTER) == 0:
+                for sample in tumor_samples:
+                    mutation_id = Mutation._construct_mutation_id(rec)
+                    tumor_call = rec.genotype(sample)
+                    call_data = tumor_call.data
+                    counts = call_data.AD
+                    ref_counts =  counts[0]
+                    alt_counts = counts[1]
+
+                    mutation_list.append(Mutation(
+                        sample_id=sample_id, 
+                        mutation_id=mutation_id, 
+                        ref_counts=ref_counts, 
+                        alt_counts=alt_counts))
+
+        return mutation_list
+
+    @staticmethod
+    def mutation_list_from_moss(sample_id:str, vcf_reader: vcf.Reader):
+        """
+        Generate a list of Mutations from VCF file
+        """
+
+        mutation_list = []
+        tumor_samples = vcf_reader.metadata["tumor_sample"]
+
+        for rec in vcf_reader:
+            if len(rec.FILTER) == 0:
+                for sample in tumor_samples:
+                    mutation_id = Mutation._construct_mutation_id(rec)
+                    tumor_call = rec.genotype(sample)
+                    call_data = tumor_call.data
+                    DP = int(call_data.DP)
+                    TCOUNT = int(call_data.TCOUNT)
+                    ref_counts = DP - TCOUNT
+                    alt_counts = TCOUNT
+
+                    mutation_list.append(Mutation(
+                        sample_id=sample, 
+                        mutation_id=mutation_id, 
+                        ref_counts=ref_counts, 
+                        alt_counts=alt_counts))
+
+        return mutation_list
 
     @staticmethod
     def _construct_mutation_id(vcf_record:vcf.model._Record) -> str:

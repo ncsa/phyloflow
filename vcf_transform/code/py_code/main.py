@@ -11,8 +11,8 @@ def main(args):
     print("main.py: got the args: " + str(args))
 
     vcf_type:str = args[0]
-    if not vcf_type == 'mutect':
-        raise Exception('Can only understand vcf from mutect')
+    if not vcf_type == 'mutect' and vcf_type != 'moss':
+        raise Exception('Can only understand vcf from mutect or moss')
 
     vcf_fn:str = args[1]
     header_json_out_fn = args[2]
@@ -26,7 +26,10 @@ def main(args):
 
     sample_id = extract_sample_id(vcf_fn)
 
-    mutations = [Mutation.from_mutect_vcf_record(sample_id, row) for row in vcf_reader]
+    if vcf_type == 'mutect':
+        mutations = Mutation.mutation_list_from_mutect(sample_id, vcf_reader)
+    elif vcf_type == 'moss':
+        mutations = Mutation.mutation_list_from_moss(sample_id, vcf_reader)
 
     mutation.write_mutations_json(mutations_json_out_fn, mutations)
     mutation.write_pyclone_vi_input(pyclone_vi_out_fn, mutations)
@@ -51,7 +54,14 @@ def extract_sample_id(input_filename):
     p = Path(input_filename)
     sample_id = (p.stem)
     return sample_id
-    
+
+def extract_sample_id_from_header(vcf_reader: vcf.Reader):
+    """
+    infers a sample_id from the header of the vcf file.
+    """
+    sample_id = vcf_reader.metadata["tumor_sample"]
+    return sample_id
+
 def pp_jsons(jdata) -> str:
     """
     convert a data structure to json and create a pretty print string.
