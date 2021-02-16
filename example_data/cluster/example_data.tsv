@@ -1,0 +1,13 @@
+2 #m
+5 #n
+#sample_index	sample_label	character_index	character_label	vaf_lb	vaf_mean	vaf_ub	x	y	mu
+0	sample0	0	0	0.5	0.5	0.5	1	1	1
+1	sample1	0	0	0.5	0.5	0.5	1	1	1
+0	sample0	1	1	0	0	0	1	1	1
+1	sample1	1	1	0.375	0.375	0.375	1	1	1
+0	sample0	2	2	0	0	0	1	1	1
+1	sample1	2	2	0.165	0.165	0.165	1	1	1
+0	sample0	3	3	0.03	0.03	0.03	1	1	1
+1	sample1	3	3	0	0	0	1	1	1
+0	sample0	4	4	0	0	0	1	1	1
+1	sample1	4	4	0.125	0.125	0.125	1	1	1
