@@ -74,6 +74,9 @@ def get_cluster_pyclone(cluster_file):
 def get_cluster_pyclone_vi(cluster_file, tsv_files):
     df_clusters = pd.read_csv(cluster_file, sep='\t',
                               dtype={"mutation_id": bytes, "sample_id": bytes})
+    # We need ast.literal_eval(x).decode("utf-8") since the csv file output by pyclone-vi
+    # contains literal "b'xxx_id'" in the csv file, we only want the string "xxx_id" inside.
+    # May change this to a better way in the future.
     df_clusters["mutation_id"] = df_clusters["mutation_id"].apply(lambda x: ast.literal_eval(x).decode("utf-8"))
     df_clusters["sample_id"] = df_clusters["sample_id"].apply(lambda x: ast.literal_eval(x).decode("utf-8"))
     df_input = pd.read_csv(tsv_files, sep='\t').set_index("mutation_id")

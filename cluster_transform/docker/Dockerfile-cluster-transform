@@ -1,4 +1,4 @@
-# This container installs pyVCF and the code in phyloflow/vcf_transform/code
+# This container installs the code in phyloflow/cluster_transform/code
 # Conda is used to manage the python env(s) inside the container:
 # Use 'conda run ..' with 'cluster-transform'
 
