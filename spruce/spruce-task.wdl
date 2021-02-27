@@ -13,7 +13,7 @@ task spruce_phylogeny {
 		File err_response = stderr()
 
 		File cliques = "spruce.cliques"
-		File result = "spruce.res"
+		File result = "spruce.res.gz"
 		File rank_result = "spruce.merged.res"
 	}
 

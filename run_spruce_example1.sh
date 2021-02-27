@@ -5,6 +5,6 @@
 # authors.  This runs the wdl 'task' directly, not part of an encapsulating
 # 'workflow'
 
-FILE=./example_data/cluster/example_data.tsv
+FILE=./example_data/cluster/example_data_AML.tsv
 miniwdl run --dir=runs/ spruce/spruce-task.wdl tsv_data_file=$FILE
 
