@@ -1,0 +1,23 @@
+# This container installs PhySigs
+FROM rocker/tidyverse:3.6.3
+
+# Install Cmake and Boost
+RUN apt-get -qq update && \
+    apt-get -qq install --no-install-recommends \
+        libbz2-dev \
+        liblzma-dev && \
+    apt-get clean
+
+RUN R -e "install.packages('BiocManager')"
+RUN R -e "install.packages('RColorBrewer')"
+RUN R -e "BiocManager::install(c('graph'))"
+RUN R -e "BiocManager::install(c('BSgenome'))"
+RUN R -e "BiocManager::install(c('GenomeInfoDb'))"
+RUN R -e "BiocManager::install(c('BSgenome.Hsapiens.UCSC.hg19'))"
+RUN R -e "BiocManager::install(c('Rgraphviz'))"
+RUN R -e "devtools::install_github('elkebir-group/PhySigs_R')"
+
+COPY ./code /code
+
+RUN ls -al /
+RUN ls -al /code/
