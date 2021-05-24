@@ -3,6 +3,7 @@ task cluster_transform{
     input {
 		File cluster_tsv_file
 		String cluster_type
+		Float alpha
 		File? pyclone_vi_formatted
     }
 
@@ -12,7 +13,7 @@ task cluster_transform{
 		out_dir=$(pwd)
 		cd /code
 		sh cluster_transform_entrypoint.sh ${cluster_type} ${cluster_tsv_file} \
-			$out_dir/spruce_formatted.tsv \
+			${alpha} $out_dir/spruce_formatted.tsv \
 			${if defined(pyclone_vi_formatted) then pyclone_vi_formatted else "" }
 		pwd
 		ls -al
