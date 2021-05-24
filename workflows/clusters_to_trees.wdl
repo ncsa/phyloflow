@@ -3,8 +3,7 @@ version 1.0
 import "../cluster_transform/cluster-transform-task.wdl" as cluster_transform_task
 import "../spruce/spruce-task.wdl" as spruce_task
 
-# workflow to load a vcf and transform it (step1) into the input formats
-# needed by pyclone (step2)
+# workflow to construct trees from clusters
 workflow clusters_to_trees{
 
 	input {
