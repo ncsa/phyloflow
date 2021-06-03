@@ -1,0 +1,7 @@
+on: 1.2
+workflows:
+	- subclass: WDL
+		primaryDescriptorPath: /pyclone_vi/pyclone-vi-task.wdl
+		testParameterFiles:
+			- /dockstore/pyclone_vi_example1.test.json
+
