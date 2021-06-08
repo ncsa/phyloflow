@@ -3,8 +3,8 @@
 ##
 ## usage:
 ##   > sh publish_vcf_transform_container.sh v0.1
-## or any other tag version that has been created using tag_latest_image.sh 
+## or any other tag version that exists locally (shows with on `docker image ls`)
 ## 
 IMAGE_TAG_TO_PUSH=$1
-docker push hub.ncsa.illinois.edu/phyloflow/vcf-transform:$IMAGE_TAG_TO_PUSH
-docker push hub.ncsa.illinois.edu/phyloflow/vcf-transform:latest
+WORKING_IMAGE=public.ecr.aws/k1t6h9x8/phyloflow/vcf_transform:$IMAGE_TAG_TO_PUSH
+docker push $WORKING_IMAGE

@@ -44,7 +44,7 @@ task vcf_transform{
 		}
 
 	runtime {
-		docker: 'phyloflow/vcf-transform:latest'
+		docker: 'public.ecr.aws/k1t6h9x8/phyloflow/vcf_transform:latest'
 		}
 }
 
