@@ -192,14 +192,14 @@ workflow test1 {
 		String vcf_type
 
 	}
-    call  vcf_transform_task.vcf_transform as step1 {
+    call vcf_transform as step1 {
 		input:
 			vcf_file = vcf_input_file,
 			vcf_type = vcf_type
 	}
 
     output {
-        tsv_for_pyclonevi = step1.pyclone_vi_formatted_tsv
+        File tsv_for_pyclonevi = step1.pyclone_vi_formatted_tsv
         }
         
 
