@@ -6,3 +6,4 @@ docker run \
 	--interactive=true \
     $WORKING_IMAGE \
 	/bin/bash
+

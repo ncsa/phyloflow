@@ -5,10 +5,10 @@ This repo contains tools to package commandline tools from the field
 of cancer phylogeny into workflow building blocks including:
 - A Dockerfile for each individual computational tool.
 - WDL task definitions that define the inputs and outputs of each tool (and use the docker container for execution)
-- Scripts to push built docker images to the NCSA docker repo (hub.ncsa.illinois.edu) (needs api keys)
-- Scripts to pull docker images from hub.ncsa.illinois.edu
+- Scripts to push built docker images to the NCSA-VISA docker repo (on AWS ECR) (needs api keys)
 - Sample WDL workflows that contain the above tasks.
 - Example scripts to run the workflows using miniwdl at the commandline, using example data from this repo.
+- Integration configs for Dockstore.org
 
 This is currently a **_prototype_** and is meant to be a demonstration of WDL and
 Docker to experiment with deployment options, not to produce fine-tuned or even
@@ -25,6 +25,7 @@ similar results but pyclone-vi will complete much faster.
 
 ## Installation
 
+(also see install.md for advanced docs)
 ### Prereqs
 - Example scripts require miniwdl 0.9. If you have conda installed:
         
@@ -37,14 +38,11 @@ similar results but pyclone-vi will complete much faster.
 The wdl tasks each have their own docker image that must be stored locally. You may either pull
 the images from the NCSA's docker hub or build from Dockerfile's using the provided scripts.
 
-To download and install from NCSA's hub, use the provided script:
+To download and install from NCSA-VISA's hub, use the provided script:
 
     sh pull_docker_images.sh
 
 OR to build the images yourself:
-
-    cd pyclone/docker 
-    sh build_pyclone_container.sh
 
     cd ../../pyclone_vi/docker
     sh build_pyclone_vi_container.sh
