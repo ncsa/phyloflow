@@ -1,4 +1,4 @@
-version 1.1
+version 1.0
 
 ## This standalone version of the full phyloflow workflow contains all tasks
 ## and docker references inline (no imports).
