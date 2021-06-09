@@ -50,7 +50,6 @@ task vcf_transform{
 
 		Array[File] pyclone_formatted_tsvs = glob("pyclone_samples/*.tsv")
 
-
 		}
 
 	runtime {
@@ -59,7 +58,7 @@ task vcf_transform{
 }
 
 #computes mutation clusters from data originally from a vcf file
-task pyclone_vi_clustering{
+task pyclone_vi{
     input {
 		File mutations_tsv
     }
@@ -79,7 +78,7 @@ task pyclone_vi_clustering{
 		}
 
 	runtime {
-		docker: 'public.ecr.aws/k1t6h9x8/phyloflow/pyclone-vi:latest'
+		docker: 'public.ecr.aws/k1t6h9x8/phyloflow/pyclone_vi:latest'
 		}
 }
 
@@ -117,7 +116,7 @@ task cluster_transform{
 		}
 
 	runtime {
-		docker: 'public.ecr.aws/k1t6h9x8/phyloflow/cluster-transform:latest'
+		docker: 'public.ecr.aws/k1t6h9x8/phyloflow/cluster_transform:latest'
 		}
 }
 
@@ -148,60 +147,84 @@ task spruce_phylogeny {
 
 #match phylogeny trees (nodes) with a signature database
 #and then compute exposure counts that nodes have in common
-task physigs{
-	input {
-		File tree_csv
-		File snv_csv
-		File? signatures
-	}
+##task physigs{
+##	input {
+##		File tree_csv
+##		File snv_csv
+##		File? signatures
+##	}
+##
+##	command {
+##		pwd
+##		out_dir=$(pwd)
+##		cd /code
+##		sh physigs_entrypoint.sh ${tree_csv} ${snv_csv} $out_dir/physigs_tree \
+##			${if defined(signatures) then signatures else "" }
+##		pwd
+##		ls -al
+##		cd ..
+##		ls -al /
+##		ls /mnt
+##	}
+##
+##	output {
+##		File response = stdout()
+##		File err_response = stderr()
+##
+##		File physigs_plot = 'physigs_tree.plot.pdf'
+##		File physigs_tree = 'physigs_tree.tree.tsv'
+##		File physigs_exposure = 'physigs_tree.exposure.tsv'
+##
+##
+##		}
+##
+##	runtime {
+##		docker: 'public.ecr.aws/k1t6h9x8/phyloflow/physigs:latest'
+##		}
+##}
 
-	command {
-		pwd
-		out_dir=$(pwd)
-		cd /code
-		sh physigs_entrypoint.sh ${tree_csv} ${snv_csv} $out_dir/physigs_tree \
-			${if defined(signatures) then signatures else "" }
-		pwd
-		ls -al
-		cd ..
-		ls -al /
-		ls /mnt
-	}
-
-	output {
-		File response = stdout()
-		File err_response = stderr()
-
-		File physigs_plot = 'physigs_tree.plot.pdf'
-		File physigs_tree = 'physigs_tree.tree.tsv'
-		File physigs_exposure = 'physigs_tree.exposure.tsv'
 
 
-		}
-
-	runtime {
-		docker: 'public.ecr.aws/k1t6h9x8/phyloflow/physigs:latest'
-		}
-}
-
-
-
-workflow test1 {
+workflow phyloflow{
 
 	input {
 
 		File vcf_input_file
 		String vcf_type
 
+        Float alpha_for_cluster_transform = 0.05
+
 	}
-    call vcf_transform as step1 {
+    call vcf_transform as vcf_to_pyclonevi_in{
 		input:
 			vcf_file = vcf_input_file,
 			vcf_type = vcf_type
 	}
 
+    call pyclone_vi as pyclonevi_clustering{
+        input:
+            mutations_tsv = vcf_to_pyclonevi_in.pyclone_vi_formatted_tsv
+    }
+
+    call cluster_transform as clusters_to_spruce_in{
+        input:
+            cluster_tsv_file = pyclonevi_clustering.cluster_assignment,
+            cluster_type = "pyclone-vi",
+            alpha = alpha_for_cluster_transform,
+            pyclone_vi_formatted = vcf_to_pyclonevi_in.pyclone_vi_formatted_tsv
+    }
+
+    call spruce_phylogeny as spruce_tree_building{
+        input:
+            tsv_data_file = clusters_to_spruce_in.spruce_input
+    }
+
     output {
-        File tsv_for_pyclonevi = step1.pyclone_vi_formatted_tsv
+        File input_mutations = vcf_to_pyclonevi_in.pyclone_vi_formatted_tsv
+		File pyclone_vi_clusters = pyclonevi_clustering.cluster_assignment
+        File spruce_cliques = spruce_tree_building.cliques
+        File spruce_result = spruce_tree_building.result
+        File spruce_rank_result = spruce_tree_building.rank_result
         }
         
 
