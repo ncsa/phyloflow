@@ -1,7 +1,8 @@
-on: 1.2
+version: 1.2
 workflows:
-	- subclass: WDL
-		primaryDescriptorPath: /workflows/phyloflow_standalone.wdl
-		testParameterFiles:
-			- /dockstore/phyloflow_standalone_example1.test.json
+    - subclass: WDL
+      name: phyloflow_standalone
+      primaryDescriptorPath: /workflows/phyloflow_standalone.wdl
+      testParameterFiles:
+        - /dockstore/phyloflow_standalone_example1.test.json
 
