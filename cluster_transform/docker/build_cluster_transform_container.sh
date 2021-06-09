@@ -1,4 +1,5 @@
 echo "Begin build_cluster_transform.sh"
-#docker build --file=Dockerfile-pyclone --tag=phyloflow/pyclone:latest ..
-docker build --file=Dockerfile-cluster-transform --tag=phyloflow/cluster-transform:latest ..
+WORKING_IMAGE=public.ecr.aws/k1t6h9x8/phyloflow/cluster_transform:latest
+DOCKERFILE=Dockerfile-cluster-transform
+docker build --file=$DOCKERFILE --tag=$WORKING_IMAGE ..
 echo "Finished build_cluster_transform.sh"
