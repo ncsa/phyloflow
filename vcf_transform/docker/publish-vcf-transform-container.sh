@@ -1,5 +1,5 @@
-## Push an image that exists on this machine (built by build_vcf_transform_container.sh and tagged by tag_latest_image.sh)
-## to NCSA's docker hub (the Harbor instance running at hub.ncsa.illinois.edu)
+## Push an image that exists on this machine (built by build_vcf_transform_container.sh) 
+## to NCSA-VISA's ElasticContainerRegistry
 ##
 ## usage:
 ##   > sh publish_vcf_transform_container.sh v0.1
