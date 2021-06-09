@@ -1,3 +1,5 @@
+version 1.1
+
 ## This standalone version of the full phyloflow workflow contains all tasks
 ## and docker references inline (no imports).
 ## This makes it easier to run in some situations where isolated tasks
