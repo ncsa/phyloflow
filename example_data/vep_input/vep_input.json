@@ -1,0 +1,6 @@
+{
+  "run_vep.vep.vcf": "./example_data/mek_lab_vcfs/A25.mutect2.filtered.snp.vcf",
+  "run_vep.vep.cache_version": "104",
+  "run_vep.vep.cache_dir": "./example_data/vep_input/vep_data.tar",
+  "run_vep.vep.ref": "GRCh37"
+}
