@@ -14,8 +14,10 @@ RUN R -e "BiocManager::install(c('graph'))"
 RUN R -e "BiocManager::install(c('BSgenome'))"
 RUN R -e "BiocManager::install(c('GenomeInfoDb'))"
 RUN R -e "BiocManager::install(c('BSgenome.Hsapiens.UCSC.hg19'))"
+RUN R -e "BiocManager::install(c('BSgenome.Hsapiens.UCSC.hg38'))"
 RUN R -e "BiocManager::install(c('Rgraphviz'))"
 RUN R -e "devtools::install_github('elkebir-group/PhySigs_R')"
+RUN R -e "install.packages('optparse')"
 
 COPY ./code /code
 
