@@ -15,6 +15,8 @@ task spruce_phylogeny {
 		File cliques = "spruce.cliques"
 		File result = "spruce.res.gz"
 		File rank_result = "spruce.merged.res"
+		File tree_text = "spruce.res.txt"
+		File tree_json = "spruce.res.json"
 	}
 
 	runtime {
