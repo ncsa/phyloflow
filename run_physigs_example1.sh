@@ -6,6 +6,6 @@ PHYSIGS_SIGNATURES=./example_data/physigs/signatures.txt
 
 miniwdl run --dir=runs/ physigs/physigs-task.wdl \
     tree_csv=$PHYSIGS_TREE \
-    snv_csv=$PHYSIGS_SNV \
+    snvs_csv=$PHYSIGS_SNV \
     signatures=$PHYSIGS_SIGNATURES
 

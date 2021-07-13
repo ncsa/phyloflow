@@ -32,6 +32,8 @@ workflow clusters_to_trees{
 		File cliques = step2.cliques
 		File result = step2.result
 		File rank_result = step2.rank_result
+		File tree_text = step2.tree_text
+		File tree_json = step2.tree_json
 	}
 
 }

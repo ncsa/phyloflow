@@ -107,8 +107,9 @@ class Mutation(object):
         chrom = str(vcf_record.CHROM)
         pos = str(vcf_record.POS)
         ref = str(vcf_record.REF)
+        alt = str(vcf_record.ALT)
         #mid = (chrom + ":" + pos + ":" + ref).decode('utf-8')
-        mid = (chrom + ":" + pos)
+        mid = (chrom + ":" + pos + ":" + ref + ">" + alt)
         return mid
 
 
