@@ -1,0 +1,39 @@
+/**
+ * @license
+ * MyFonts Webfont Build ID 3309196, 2016-11-16T07:18:44-0500
+ *
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are
+ * explicitly restricted from using the Licensed Webfonts(s).
+ *
+ * You may obtain a valid license at the URLs below.
+ *
+ * Webfont: URWGeometric-Light by URW++
+ * URL: http://www.myfonts.com/fonts/urw/geometric/light/
+ *
+ * Webfont: URWGeometric-Bold by URW++
+ * URL: http://www.myfonts.com/fonts/urw/geometric/bold/
+ *
+ * Webfont: URWGeometric-Black by URW++
+ * URL: http://www.myfonts.com/fonts/urw/geometric/black/
+ *
+ *
+ * License: http://www.myfonts.com/viewlicense?type=web&buildid=3309196
+ * Licensed pageviews: 20,000
+ * Webfonts copyright: (URW)++,Copyright 2015 by (URW)++ Design &amp; Development
+ *
+ * © 2016 MyFonts Inc
+*/
+
+
+/* @import must be at top of file, otherwise CSS will not work */
+@import url("https://hello.myfonts.net/count/327e8c");
+
+
+@font-face {font-family: 'URWGeometric-Light';src: url('webfonts/327E8C_0_0.eot');src: url('webfonts/327E8C_0_0.eot?#iefix') format('embedded-opentype'),url('webfonts/327E8C_0_0.woff2') format('woff2'),url('webfonts/327E8C_0_0.woff') format('woff'),url('webfonts/327E8C_0_0.ttf') format('truetype'),url('webfonts/327E8C_0_0.svg#wf') format('svg');}
+
+
+@font-face {font-family: 'URWGeometric-Bold';src: url('webfonts/327E8C_1_0.eot');src: url('webfonts/327E8C_1_0.eot?#iefix') format('embedded-opentype'),url('webfonts/327E8C_1_0.woff2') format('woff2'),url('webfonts/327E8C_1_0.woff') format('woff'),url('webfonts/327E8C_1_0.ttf') format('truetype'),url('webfonts/327E8C_1_0.svg#wf') format('svg');}
+
+
+@font-face {font-family: 'URWGeometric-Black';src: url('webfonts/327E8C_2_0.eot');src: url('webfonts/327E8C_2_0.eot?#iefix') format('embedded-opentype'),url('webfonts/327E8C_2_0.woff2') format('woff2'),url('webfonts/327E8C_2_0.woff') format('woff'),url('webfonts/327E8C_2_0.ttf') format('truetype'),url('webfonts/327E8C_2_0.svg#wf') format('svg');}
