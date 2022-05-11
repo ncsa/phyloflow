@@ -1,0 +1,90 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "samples": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "sample_id": {"type": "number"},
+                    "name": {"type": "string"},
+                    "type": {"type": "string"}
+                }
+            }
+        },
+        "SNV": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "SNV_id": {"type": "number"},
+                    "chr": {"type": "string"},
+                    "start": {"type": "number"},
+                    "reference": {"type": "string"},
+                    "variant": {"type": "string"},
+                    "strand": {"type": "string"},
+                    "consequence": {"type": "string"},
+                    "symbol": {"type": "string"},
+                    "gene": {"type": "string"},
+                    "vaf": {
+                        "type": "array",
+                        "items": {"type": "number"}
+                    },
+                    "vaf_counts": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {"type": "number"}
+                        }
+                    },
+                    "amino_acid_change": {"type": "string"}
+                }
+            }
+        },
+        "clusters": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "cluster_id": {"type": "number"},
+                    "sample": {"type": "string"},
+                    "variants": {
+                        "type": "array",
+                        "items": {"type": "number"}
+                    }
+                }
+            }
+        },
+        "trees": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "children": {
+                        "type": "object",
+                        "patternProperties": {
+                            ".*": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "prevalence": {
+                        "type": "object",
+                        "patternProperties": {
+                            ".*": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
