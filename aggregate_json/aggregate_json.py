@@ -92,7 +92,7 @@ def skip_lines(file, n_skip):
         # print(next(file), end='')
         next(file)
 
-def parse_spruce_result(spruce_file: str) -> List[Dict]:
+def parse_spruce_result(spruce_file: str, sample2id: dict) -> List[Dict]:
     with (
         gzip.open(spruce_file, "rt") if (
             spruce_file.endswith("gzip") or
@@ -109,7 +109,9 @@ def parse_spruce_result(spruce_file: str) -> List[Dict]:
             k = int(line.split()[0])
             m = int(next(spruce).split()[0])
             n = int(next(spruce).split()[0])
-            skip_lines(spruce, k*m + 4) # observed F
+            skip_lines(spruce, k*m + 1) # observed F
+            sample_ids = [sample2id[sample] for sample in next(spruce).strip().split()]
+            skip_lines(spruce, 2)
             skip_lines(spruce, n * 2 + 1) # tree (A)
             skip_lines(spruce, 2 + n + 1)
             skip_lines(spruce, 2)
@@ -120,10 +122,10 @@ def parse_spruce_result(spruce_file: str) -> List[Dict]:
                 "prevalence": np.array(usage),
             })
             skip_lines(spruce, 3 + k*m + 4) # inferred F
-        return sols
+        return sols, sample_ids
 
-def parse_spruce(spruce_json: str, spruce_res: str) -> List[defaultdict]:
-    res = parse_spruce_result(spruce_res)
+def parse_spruce(spruce_json: str, spruce_res: str, sample2id: dict) -> List[defaultdict]:
+    res, sample_ids = parse_spruce_result(spruce_res, sample2id)
     with open(spruce_json, "r") as ifile:
         spruce = json.load(ifile)
         spruce_convert = {int(node["id"]): node["label"].strip("()").split(",")[0] for node in spruce["nodes"]}
@@ -131,13 +133,24 @@ def parse_spruce(spruce_json: str, spruce_res: str) -> List[defaultdict]:
         for key, sol in spruce.items():
             if key.startswith("sol"):
                 idx_sol = int(key.split('_')[1])
-                tree = {
-                    "children": defaultdict(list),
-                    "prevalence": {spruce_convert[i]: list(res[idx_sol]["prevalence"][:, i]) for i in spruce_convert}
-                }
+                tree = [
+                    {
+                        "name": spruce_convert[i],
+                        "prevalence": [
+                            {
+                                "sample_id": sample_id,
+                                "value": prevalence
+                            }
+                            for sample_id, prevalence in zip(sample_ids, res[idx_sol]["prevalence"][:, i])
+                        ],
+                        "children": []
+                    }
+                    for i in spruce_convert
+                ]
                 for edge in sol:
-                    tree["children"][spruce_convert[edge["source"]]].append(spruce_convert[edge["target"]])
-                    # children_lut[spruce_convert[edge["source"]]].append(spruce_convert[edge["target"]])
+                    for node in tree:
+                        if node["name"] == spruce_convert[edge["source"]]:
+                            node["children"].append(spruce_convert[edge["target"]])
                 trees.append(tree)
         return trees
 
@@ -170,6 +183,7 @@ def parse_cluster_assign(cluster_file: str, sample_to_id: dict, variants_to_id) 
 
 def main(args):
     data = {
+        "version": "phylodiver v0.1.0",
         "samples": [],
         "SNV": [],
         "clusters": [],
@@ -180,7 +194,7 @@ def main(args):
     variants, variants2id = parse_vep_variants(args.vep)
     data["SNV"] += variants
     data["clusters"] += parse_cluster_assign(args.cluster, sample2id, variants2id)
-    trees = parse_spruce(args.spruce_json, args.spruce_res)
+    trees = parse_spruce(args.spruce_json, args.spruce_res, sample2id)
     data["trees"] += trees
     with open(args.json, "w") as ofile:
         json.dump(data, ofile, indent=2)

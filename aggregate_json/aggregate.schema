@@ -1,7 +1,10 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
+        "version": {
+            "type": "string"
+        },
         "samples": {
             "type": "array",
             "items": {
@@ -9,7 +12,7 @@
                 "properties": {
                     "sample_id": {"type": "number"},
                     "name": {"type": "string"},
-                    "type": {"type": "string"}
+                    "type": {"enum": ["normal", "tumor"]}
                 }
             }
         },
@@ -39,7 +42,8 @@
                         }
                     },
                     "amino_acid_change": {"type": "string"}
-                }
+                },
+                "required": ["SNV_id", "chr", "start", "reference", "variant"]
             }
         },
         "clusters": {
@@ -59,27 +63,25 @@
         "trees": {
             "type": "array",
             "items": {
-                "type": "object",
-                "properties": {
-                    "children": {
-                        "type": "object",
-                        "patternProperties": {
-                            ".*": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {"type": "string"},
+                        "prevalence": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "sample_id": {"type": "number"},
+                                    "value": {"type": "number"}
                                 }
                             }
-                        }
-                    },
-                    "prevalence": {
-                        "type": "object",
-                        "patternProperties": {
-                            ".*": {
-                                "type": "array",
-                                "items": {
-                                    "type": "number"
-                                }
+                        },
+                        "children": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
                             }
                         }
                     }
