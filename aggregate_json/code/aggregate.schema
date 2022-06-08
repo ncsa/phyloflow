@@ -3,7 +3,8 @@
     "type": "object",
     "properties": {
         "version": {
-            "type": "string"
+            "type": "string",
+            "enum": ["phylodiver v0.1.0"]
         },
         "samples": {
             "type": "array",
@@ -51,42 +52,53 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "cluster_id": {"type": "number"},
+                    "cluster_id": {"type": "string"},
                     "sample": {"type": "string"},
                     "variants": {
                         "type": "array",
                         "items": {"type": "number"}
                     }
-                }
+                },
+                "required": ["cluster_id", "sample", "variants"]
             }
         },
         "trees": {
             "type": "array",
             "items": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "name": {"type": "string"},
-                        "prevalence": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "sample_id": {"type": "number"},
-                                    "value": {"type": "number"}
+                "type": "object",
+                "properties": {
+                    "tree_id": {"type": "string"},
+                    "tree_name": {"type": "string"},
+                    "tree_score": {"type": "number"},
+                    "nodes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "cluster_id": {"type": "string"},
+                                "prevalence": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "sample_id": {"type": "string"},
+                                            "value": {"type": "number"}
+                                        }
+                                    }
+                                },
+                                "children": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 }
-                            }
-                        },
-                        "children": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
                             }
                         }
                     }
-                }
+                },
+                "required": ["tree_id", "tree_name", "tree_score"]
             }
         }
-    }
+    },
+    "required": ["version", "samples", "SNV", "clusters", "trees"]
 }

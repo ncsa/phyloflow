@@ -133,22 +133,27 @@ def parse_spruce(spruce_json: str, spruce_res: str, sample2id: dict) -> List[def
         for key, sol in spruce.items():
             if key.startswith("sol"):
                 idx_sol = int(key.split('_')[1])
-                tree = [
-                    {
-                        "name": spruce_convert[i],
-                        "prevalence": [
-                            {
-                                "sample_id": sample_id,
-                                "value": prevalence
-                            }
-                            for sample_id, prevalence in zip(sample_ids, res[idx_sol]["prevalence"][:, i])
-                        ],
-                        "children": []
-                    }
-                    for i in spruce_convert
-                ]
+                tree = {
+                    "tree_id": str(idx_sol),
+                    "tree_name": f"tree_{idx_sol}",
+                    "tree_score": float("nan"),
+                    "nodes": [
+                        {
+                            "name": spruce_convert[i],
+                            "prevalence": [
+                                {
+                                    "sample_id": str(sample_id),
+                                    "value": prevalence
+                                }
+                                for sample_id, prevalence in zip(sample_ids, res[idx_sol]["prevalence"][:, i])
+                            ],
+                            "children": []
+                        }
+                        for i in spruce_convert
+                    ]
+                }
                 for edge in sol:
-                    for node in tree:
+                    for node in tree["nodes"]:
                         if node["name"] == spruce_convert[edge["source"]]:
                             node["children"].append(spruce_convert[edge["target"]])
                 trees.append(tree)
@@ -173,7 +178,7 @@ def parse_cluster_assign(cluster_file: str, sample_to_id: dict, variants_to_id) 
 
     for (sample_name, cluster_id), group in grouped:
         clusters.append({
-            "cluster_id": int(cluster_id),
+            "cluster_id": str(cluster_id),
             "sample": str(sample_name),
             "variants": [variants_to_id[v] for v in group["mutation_id"]]
         })
