@@ -52,14 +52,15 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "cluster_id": {"type": "string"},
-                    "sample": {"type": "string"},
+                    "cluster_id": {"type": "number"},
+                    "sample_name": {"type": "string"},
+                    "sample_id": {"type": "number"},
                     "variants": {
                         "type": "array",
                         "items": {"type": "number"}
                     }
                 },
-                "required": ["cluster_id", "sample", "variants"]
+                "required": ["cluster_id", "sample_name", "sample_id", "variants"]
             }
         },
         "trees": {
@@ -67,7 +68,7 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "tree_id": {"type": "string"},
+                    "tree_id": {"type": "number"},
                     "tree_name": {"type": "string"},
                     "tree_score": {"type": "number"},
                     "nodes": {
@@ -75,13 +76,14 @@
                         "items": {
                             "type": "object",
                             "properties": {
-                                "cluster_id": {"type": "string"},
+                                "node_name": {"type": "string"},
+                                "cluster_id": {"type": "number"},
                                 "prevalence": {
                                     "type": "array",
                                     "items": {
                                         "type": "object",
                                         "properties": {
-                                            "sample_id": {"type": "string"},
+                                            "sample_id": {"type": "number"},
                                             "value": {"type": "number"}
                                         }
                                     }
@@ -92,7 +94,8 @@
                                         "type": "string"
                                     }
                                 }
-                            }
+                            },
+                            "required": ["node_name", "prevalence", "children"]
                         }
                     }
                 },
