@@ -1,7 +1,7 @@
 task physigs{
 	input {
 		File tree_csv
-		File snv_csv
+		File snvs_csv
 		File? signatures
 	}
 
@@ -9,7 +9,7 @@ task physigs{
 		pwd
 		out_dir=$(pwd)
 		cd /code
-		sh physigs_entrypoint.sh ${tree_csv} ${snv_csv} $out_dir/physigs_tree \
+		sh physigs_entrypoint.sh ${tree_csv} ${snvs_csv} $out_dir/physigs_tree \
 			${if defined(signatures) then signatures else "" }
 		pwd
 		ls -al

@@ -23,5 +23,8 @@ $build_dir/enumerate -clique $CLIQUE -t 2 -v 3 $DATA > spruce.res
 gzip -c spruce.res > spruce.res.gz
 echo "SPRUCE: Running rank"
 zcat spruce.res.gz | $build_dir/rank - > spruce.merged.res
+echo "SPRUCE: Visualize"
+zcat spruce.res.gz | $build_dir/visualize -i 0 -a - > spruce.res.txt
+zcat spruce.res.gz | $build_dir/visualize -i 0 -j - > spruce.res.json
 
 echo "spruce_entrypoint.sh finished."

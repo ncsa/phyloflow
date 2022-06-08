@@ -12,9 +12,9 @@
 echo "physigs_entrypoint.sh: begin."
 echo "physigs_entrypoint.sh: list of input args from wdl runtime: $@"
 if [ $# -eq 3 ]; then
-    Rscript run_physigs.R $1 $2 $3
+    Rscript run_physigs.R --tree $1 --snv $2 --outprefix $3
 elif [ $# -eq 4 ]; then
-    Rscript run_physigs.R $1 $2 $3 $4
+    Rscript run_physigs.R --tree $1 --snv $2 --outprefix $3 --signature $4
 else
     echo "physigs_entrypoint.sh: wrong number of input args, only 3 or 4 allowed."
 fi
