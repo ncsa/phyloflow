@@ -26,6 +26,8 @@ def parse_vcf_samples(vcf_file: str) -> Tuple[List[Dict], Dict]:
     for rec in vcf.header.records:
         if rec.key == "normal_sample":
             temp[rec.value] = "normal"
+            sample2id[rec.value] = idx
+            idx += 1
         elif rec.key == "tumor_sample":
             temp[rec.value] = "tumor"
             sample2id[rec.value] = idx
@@ -33,7 +35,7 @@ def parse_vcf_samples(vcf_file: str) -> Tuple[List[Dict], Dict]:
     return [{"sample_id": idx+1, "name": sample, "type": temp[sample]} for idx, sample in enumerate(vcf.header.samples)], sample2id
 
 
-def parse_vep_variants(vep_file: str) -> Tuple[List[Dict], Dict]:
+def parse_vep_variants(vep_file: str, program: str="moss") -> Tuple[List[Dict], Dict]:
     """Parse VEP output format.
 
     VEP details are written in INFO field CSQ.
@@ -53,9 +55,14 @@ def parse_vep_variants(vep_file: str) -> Tuple[List[Dict], Dict]:
     idx = 0
     for rec in vep:
         annotation = rec.info["CSQ"][0].split("|")
-        vaf = [rec.samples[sample]["TCOUNT"] / rec.samples[sample]["DP"] if rec.samples[sample]["TCOUNT"] > 0 else 0
-            for sample in samples ]
-        vaf_counts = [[rec.samples[sample]["TCOUNT"], rec.samples[sample]["DP"]] for sample in samples ]
+        if program == "moss":
+            vaf = [rec.samples[sample]["TCOUNT"] / rec.samples[sample]["DP"] if rec.samples[sample]["TCOUNT"] > 0 else 0
+                for sample in samples ]
+            vaf_counts = [[rec.samples[sample]["TCOUNT"], rec.samples[sample]["DP"]] for sample in samples ]
+        elif program == "mutect":
+            vaf = [rec.samples[sample]["AD"][1] / (rec.samples[sample]["AD"][0] + rec.samples[sample]["AD"][1]) if rec.samples[sample]["AD"][1] > 0 else 0
+                for sample in samples ]
+            vaf_counts = [[rec.samples[sample]["AD"][1], (rec.samples[sample]["AD"][0] + rec.samples[sample]["AD"][1])] for sample in samples ]
         aa_change = urllib.parse.unquote(annotation[index['hgvsp']].split(':')[-1])
         # if "/" in annotation[index["amino_acids"]]:
         #     # TODO: Let VEP output HGSV notation
@@ -136,7 +143,7 @@ def parse_spruce(spruce_json: str, spruce_res: str, sample2id: dict) -> List[def
                 tree = {
                     "tree_id": int(idx_sol),
                     "tree_name": f"tree_{idx_sol}",
-                    "tree_score": float("nan"),
+                    "tree_score": None,
                     "nodes": [
                         {
                             "node_name": spruce_convert[i],
@@ -199,7 +206,7 @@ def main(args):
     }
     samples, sample2id = parse_vcf_samples(args.vep)
     data["samples"] += samples
-    variants, variants2id = parse_vep_variants(args.vep)
+    variants, variants2id = parse_vep_variants(args.vep, args.program)
     data["SNV"] += variants
     data["clusters"] += parse_cluster_assign(args.cluster, sample2id, variants2id)
     trees = parse_spruce(args.spruce_json, args.spruce_res, sample2id)
@@ -218,6 +225,7 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--cluster", help="Clustering output file [workflow]")
     parser.add_argument("-s", "--spruce-json", help="SPRUCE visualization JSON file [workflow]")
     parser.add_argument("-S", "--spruce-res", help="SPRUCE result file [workflow]")
+    parser.add_argument("-p", "--program", help="program for variant calling", choices=["moss", "mutect"])
     args = parser.parse_args(None if sys.argv[1:] else ['-h'])
 
     main(args)
