@@ -5,6 +5,7 @@ task aggregate_json{
 		File cluster_assignment
 		File spruce_json
 		File spruce_res
+		String vcf_type
     }
 
 	command {
@@ -17,7 +18,8 @@ task aggregate_json{
 			-c ${cluster_assignment} \
 			-s ${spruce_json} \
 			-S ${spruce_res} \
-			-j $out_dir/aggregated.json
+			-j $out_dir/aggregated.json \
+			--program ${vcf_type}
 		pwd
 		ls -al
 		cd ..
