@@ -20,19 +20,19 @@ def parse_vcf_samples(vcf_file: str) -> Tuple[List[Dict], Dict]:
         Dict: sample to id mapping
     """
     vcf = pysam.VariantFile(vcf_file)
-    temp = {}
+    temp = []
     sample2id = {}
     idx = 1
     for rec in vcf.header.records:
         if rec.key == "normal_sample":
-            temp[rec.value] = "normal"
+            temp.append({"sample_id": idx, "name": rec.value, "type": "normal"})
             sample2id[rec.value] = idx
             idx += 1
         elif rec.key == "tumor_sample":
-            temp[rec.value] = "tumor"
+            temp.append({"sample_id": idx, "name": rec.value, "type": "tumor"})
             sample2id[rec.value] = idx
             idx += 1
-    return [{"sample_id": idx+1, "name": sample, "type": temp[sample]} for idx, sample in enumerate(vcf.header.samples)], sample2id
+    return temp, sample2id
 
 
 def parse_vep_variants(vep_file: str, program: str="moss") -> Tuple[List[Dict], Dict]:
@@ -225,7 +225,7 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--cluster", help="Clustering output file [workflow]")
     parser.add_argument("-s", "--spruce-json", help="SPRUCE visualization JSON file [workflow]")
     parser.add_argument("-S", "--spruce-res", help="SPRUCE result file [workflow]")
-    parser.add_argument("-p", "--program", help="program for variant calling", choices=["moss", "mutect"])
+    parser.add_argument("-p", "--program", help="program for variant calling", required=True, choices=["moss", "mutect"])
     args = parser.parse_args(None if sys.argv[1:] else ['-h'])
 
     main(args)
