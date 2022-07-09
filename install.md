@@ -116,6 +116,6 @@ published as the new publically available version, you can, for example:
 ```
 cd vcf_transform/docker
 sh build_vcf_transform_container.sh
-sh publish_vcf_transform_container.sh
+sh publish_vcf_transform_container.sh latest
 ```
 
