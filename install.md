@@ -59,14 +59,63 @@ dockstore tool launch --local-entry workflows/vcf_to_clusters.wdl --json docksto
 
 
 ### AWS
-There are many ways to install the aws-cli, but for consistency here is the conda command:
+There are many ways to install the aws-cli which the ECR script use, but for
+consistency here is the conda command:
 ```
 conda install -c conda-forge awscli
 ```
 
-If IAM permissions are working, this command will list the public repositories.
+### AWS Elastic Container Registry
+Phyloflow uses the AWS docker hub alternative to publish the docker images used
+by the pipeline stages. The only cost is the file storage to S3.
+
+The public gallery (published images) is here: https://gallery.ecr.aws/?searchTerm=phyloflow
+The private admin panels are in the uiuc-ncsa-visualanalytics account, eg:
+https://us-east-1.console.aws.amazon.com/ecr/repositories/public/416927654161/phyloflow/cluster_transform?region=us-east-1
+
+#### Publishing new image versions
+The high level steps are:
+1. Install AWS credentials on the local machine
+2. Log into the docker registry using a script that calls AWS.
+3. Run the publish-docker* script for each pipeline stage.
+
+
+Credentials:
+
+Standard usage is to get security credentials for the user `phyloflow-ecr-uploader`
+https://us-east-1.console.aws.amazon.com/iam/home#/users/phyloflow-ecr-uploader
+
+The credentials need to be under a profile `phyloflow` in ~/.aws/credentials
+like this (you may already have a `default` profile, add this after):
+
+       [phyloflow]
+       aws_access_key_id = XXXX_your_key_for_phyloflow-ecr-uploader
+       aws_secret_access_key = YYYY_your_secret_key_for_phyloflow-ecr-uploader
+
+In theory you could also give your own account the same permissions that the phyloflow IAM user has.
+
+If IAM permissions are working and you have the aws-cli installed, this command will list the public repositories.
 ```
 aws ecr-public --profile phyloflow --region us-east-1  describe-repositories
 ```
 
+If that command doesn't work, the scripts in this repo likely won't work.
+
+With the credentials installed, you can now 'log in' to docker using the script:
+```
+sh login_docker_aws_ecr.sh
+```
+
+If you don't care to build the docker images yourself, you can pull them all:
+```
+sh pull_docker_images
+```
+
+Finally, if you want the image built on your local machine and then to be
+published as the new publically available version, you can, for example:
+```
+cd vcf_transform/docker
+sh build_vcf_transform_container.sh
+sh publish_vcf_transform_container.sh
+```
 
