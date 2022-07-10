@@ -70,7 +70,7 @@
                 "properties": {
                     "tree_id": {"type": "number"},
                     "tree_name": {"type": "string"},
-                    "tree_score": {"type": "number"},
+                    "tree_score": {"type": ["number", "null"]},
                     "nodes": {
                         "type": "array",
                         "items": {
