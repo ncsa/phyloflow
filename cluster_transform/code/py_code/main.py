@@ -82,14 +82,14 @@ def get_cluster_pyclone_vi(cluster_file, tsv_files, alpha):
     # May change this to a better way in the future.
     df_clusters["mutation_id"] = df_clusters["mutation_id"].apply(lambda x: ast.literal_eval(x).decode("utf-8"))
     df_clusters["sample_id"] = df_clusters["sample_id"].apply(lambda x: ast.literal_eval(x).decode("utf-8"))
-    df_input = pd.read_csv(tsv_files, sep='\t').set_index("mutation_id")
+    df_input = pd.read_csv(tsv_files, sep='\t').set_index(["sample_id", "mutation_id"])
     df_input["VAF"] = df_input["alt_counts"] / (df_input["ref_counts"] + df_input["alt_counts"])
     list_clustered = []
     grouped = df_clusters.groupby(["sample_id", "cluster_id"])
     sample_to_id = {s: i for i, s in enumerate(
         df_clusters["sample_id"].unique())}
     for (sample_name, cluster_id), group in grouped:
-        vaf = df_input.loc[group["mutation_id"], "VAF"]
+        vaf = df_input.loc[(group["sample_id"], group["mutation_id"]), "VAF"]
         vaf_lb = vaf.quantile(alpha/2)
         vaf_mean = vaf.mean()
         vaf_ub = vaf.quantile(1 - alpha/2)
