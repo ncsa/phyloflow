@@ -28,9 +28,11 @@ This repo currently contains the WDL tasks and workflow to:
 
 ![standalone](dockstore/phyloflow_standalone_dag.PNG)
 
-This combined workflow can be launched with several cloud platforms from the [Dockstore.org](https://www.dockstore.org/workflows/github.com/ncsa/phyloflow/phyloflow_standalone:master?tab=info) or locally after following the installation instructions below from the command line with:
+This combined workflow can be launched with several cloud platforms from the [Dockstore.org](https://www.dockstore.org/workflows/github.com/ncsa/phyloflow/phyloflow_standalone:master?tab=info) or locally from the command line with:
 
         bash run_standalone_example1.sh
+
+after following the installation instructions below.
 
 ## Installation
 
