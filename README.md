@@ -1,34 +1,45 @@
 # Phyloflow
-Phylogenic tree computations packaged with Docker and WDL.
+
+Phylogenetic tree computations packaged with Docker and WDL.
 
 This repo contains tools to package commandline tools from the field
 of cancer phylogeny into workflow building blocks including:
+
 - A Dockerfile for each individual computational tool.
 - WDL task definitions that define the inputs and outputs of each tool (and use the docker container for execution)
-- Scripts to push built docker images to the NCSA-VISA docker repo (on AWS ECR) (needs api keys)
+- Scripts to push built Docker images to the NCSA-VISA docker repo (on AWS ECR) (needs api keys)
 - Sample WDL workflows that contain the above tasks.
 - Example scripts to run the workflows using miniwdl at the commandline, using example data from this repo.
-- Integration configs for Dockstore.org
+- Integration configs for [Dockstore.org](https://www.dockstore.org/workflows/github.com/ncsa/phyloflow/phyloflow_standalone:master?tab=info)
 
 This is currently a **_prototype_** and is meant to be a demonstration of WDL and
-Docker to experiment with deployment options, not to produce fine-tuned or even
-believable results without additional QC.
+Docker to experiment with deployment options, not to produce fine-tuned results without additional QC.
 
-## Workflow1: vcf_to_clusters
+## Combined Workflow: phyloflow_standalone
 
 This repo currently contains the WDL tasks and workflow to:
-1. Load a VCF file produced by 'mutect'.
-2. Transform the VCF's mutations into the input formats of 'pyclone' and 'pyclone-vi' as a task.
-3. Run 'pyclone' and 'pyclone-vi' as separate tasks concurrently.
-4. Collect the output tsv files which contain clusters of the mutations. They should be
-similar results but pyclone-vi will complete much faster.
+
+1. Load a VCF file produced by 'mutect' and the annotated version of that file from VEP.
+2. Transform the VCF's mutations into the input formats of 'pyclone-vi' as a task.
+3. Run 'pyclone-vi' for mutation clustering.
+4. Transform the pyclone clustering outputs to be compatible with 'spruce' tree inference.
+5. Run 'spruce' tree inference.
+6. Collect the appropriate output files and combine into a JSON file compatible with the visualization tool [PhyloDiver](https://github.com/ncsa/phylodiver-viz).
+
+![standalone](dockstore/phyloflow_standalone_dag.PNG)
+
+This combined workflow can be launched with several cloud platforms from the [Dockstore.org](https://www.dockstore.org/workflows/github.com/ncsa/phyloflow/phyloflow_standalone:master?tab=info) or locally after following the installation instructions below from the command line with:
+
+        bash run_standalone_example1.sh
 
 ## Installation
 
-(also see install.md for advanced docs)
+Also see [install.md](install.md) for advanced docs
+
 ### Prereqs
+
 - Example scripts require miniwdl 0.9. If you have conda installed:
-        
+
         conda install miniwdl
 
 - Requires docker installed on the local machine, with the current user in group 'docker'
@@ -51,6 +62,7 @@ OR to build the images yourself:
     sh build_vcf_transform_container.sh
 
 ## Isolated Task Examples
+
 Each WDL Task has a script of the form `run_{taskname}_example1.sh` which runs
 the task in isolation against a data file in the `example_data/` directory. These
 scripts rely on miniwdl and docker to be installed as described in Installation above.
@@ -88,7 +100,10 @@ as the input mutations file. This will create the miniwdl output in the runs/ di
 
 ## References
 
-Workflow Description Language (WDL)
+1. **Workflow Description Language (WDL)**: [[link](https://openwdl.org/)]
+2. **Variant Effect Predictor (VEP)**: McLaren, et al. "The Ensembl Variant Effect Predictor". _Genome Biology_, 2016. [[link](https://uswest.ensembl.org/info/docs/tools/vep/index.html)]
+3. **PyClone-VI**: Gillis and Roth. "PyClone-VI: scalable inference of clonal population structures using whole genome data." _BMC bioinformatics_, 2020. [[link](https://link.springer.com/article/10.1186/s12859-020-03919-2)]
+4. **SPRUCE**: El-Kebir, et al. "Inferring the mutational history of a tumor using multi-state perfect phylogeny mixtures." _Cell systems_, 2016. [[link](https://www.sciencedirect.com/science/article/pii/S2405471216302216)]
 
 ## Workflow Example
 
@@ -100,7 +115,6 @@ This will run the full workflow with the same example VCF as `run_vcf_transform_
 to the downstream clustering algorithms pyclone and pyclone-vi.
 
 WARNING: The pyclone step takes roughly an hour to complete.
-
 
 When complete, the output directory structures will look like:
 
