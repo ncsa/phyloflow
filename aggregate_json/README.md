@@ -1,10 +1,10 @@
 # Aggregate_json Task
 
-This is a WDL task to take workflow outputs and VEP annotations and combine the results in a json format compatible with the PhyloDiver visualization interface ([PhyloDiver.orgl](https://www.phylodiver.org/), [Github](https://github.com/ncsa/phylodiver-viz/tree/develop/src))
+This is a WDL task to take workflow outputs and VEP annotations and combine the results in a json format compatible with the PhyloDiver visualization interface ([PhyloDiver.org](https://www.phylodiver.org/), [Github](https://github.com/ncsa/phylodiver-viz/tree/develop/src))
 
 ## Inputs and Execution
 
-This WDL Task has a example execution script, `run_aggregate_json.sh`, in the main directory which runs the task in isolation against the data files in the `example_data/` directory. This script relies on miniwdl and docker to be correctly installed.
+This WDL Task has an example execution script, `run_aggregate_json.sh`, in the main directory which runs the task in isolation against the data files in the `example_data/` directory. This script relies on miniwdl and docker to be correctly installed.
 
 This task requires four inputs to run. They are:
 
@@ -21,7 +21,7 @@ This script will produce a file `aggregated.json` which contains the merged inpu
 
 ## JSON Output Format
 
-The output of this task is a JSON file that follows the schema required for visualization of the results with PhyloDiver. THe definition of this schema is found in the [here](code/aggregate.schema) in the code directory.
+The output of this task is a JSON file that follows the schema required for visualization of the results with PhyloDiver. The definition of this schema is found [here](code/aggregate.schema) in the code directory.
 
 ![json_schema](phylodiver_json_schema.PNG)
 
@@ -29,6 +29,6 @@ Briefly, the schema includes data organized by:
 
 1. `version`: The schema version used for the JSON construction
 2. `samples`: An array of information for the sequenced samples, including the normal tissue sample
-3. `SNV`: Genomic and annotation information extracted from the VCF files about each variant mutations
+3. `SNV`: Genomic and annotation information extracted from the VCF files about each variant mutation
 4. `clusters`: Mapping information of variants to mutation clusters for defining phylogeny edges
 5. `trees`: An array of inferred phylogenetic trees that relate the mutation clusters into evolutionary histories
